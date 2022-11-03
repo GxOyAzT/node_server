@@ -1,29 +1,14 @@
 const express = require('express')
-const mongoClient = require('mongodb').MongoClient
+const userRoute = require('./routes/user-route')
 
 const app = express()
 
-const uri = 'mongodb+srv://flashitclient:FlashItClient1@flashit.vb8uf3z.mongodb.net/?retryWrites=true&w=majority'
+app.use(express.json());
 
-app.get('/post-user', (req,res) => {
-  mongoClient.connect(uri, {}, (error, client) => {
-    if (error) res.send('Cannot connect to database')
-  
-    const db = client.db('flashit')
-  
-    db.collection('user').insertOne({
-      username: 'jakkoz',
-      password: 'jakkoz123'
-    }, (error, result) => {
-      if (error) res.send('Cannot insert')
-  
-      res.send(result)
-    })
-  })
-})
+app.use('/user', userRoute)
 
 app.get('/', (req, res) => {
-  res.send('Hello')
+  res.send('OK')
 })
 
 app.listen(9002, () => {
