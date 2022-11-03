@@ -18,7 +18,8 @@ router.route('/')
 
     var result = await userRepo.create({
       email: email,
-      password: password
+      password: password,
+      active: false
     })
 
     if (!result.isSuccess) return res.status(500).send(result)
@@ -48,6 +49,8 @@ router.route('/login')
     })
 
     if (!result.isSuccess) return res.status(401).send('Invalid email or passowrd.')
+
+    if (!result.data.active) return res.status(401).send('User is not activated.')
     
     const token = jwt.sign(
       { user_id: result.data._id },
