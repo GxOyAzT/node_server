@@ -26,6 +26,7 @@ router.route('/')
 
     res.status(200).send(result)
   })
+
   .get(auth, async (req, res) => {
     const { user_id } = req.user
     console.log(user_id)
@@ -35,6 +36,7 @@ router.route('/')
 
     if (!result.isSuccess) return res.status(404).send('Cannot find user.')
 
+    result.data.password = null
     res.status(200).send(result)
   })
 
