@@ -29,7 +29,7 @@ router.route('/')
 
   .get(auth, async (req, res) => {
     const { user_id } = req.user
-    console.log(user_id)
+    
     var result = await userRepo.find({
       _id: new mongo.ObjectID(user_id)
     })
