@@ -1,8 +1,11 @@
 const express = require('express')
 const userRoute = require('./routes/user-route')
 const folderRoute = require('./routes/folder-route')
+const cors = require('cors')
 
 const app = express()
+
+app.use(cors())
 
 app.use(express.json());
 
