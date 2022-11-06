@@ -91,4 +91,19 @@ router.route('/username')
     res.status(200).send()
   })
 
+router.route('/username/:username')
+  .get(auth, async (req, res) => {
+    const { username } = req.params
+
+    if (username === null || username === undefined || username === '') return res.status(400).send('Username cannot be empty.')
+
+    var userByUsernameResult = await userRepo.find({
+      username: username
+    })
+
+    if (!userByUsernameResult.isSuccess) return res.status(404).send('User of passed username does not exists.')
+
+    res.status(200).send({ _id: userByUsernameResult.data._id, username: userByUsernameResult.data.username })
+  })
+
 module.exports = router

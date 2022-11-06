@@ -17,7 +17,7 @@ const find = async (filter) => {
   
   if (result === null) return {
     isSuccess: false,
-    error: 'Cannot find user of passed email.',
+    error: 'Cannot find user.',
     data: null
   }
 
