@@ -26,7 +26,6 @@ router.route('/')
 
     res.status(200).send(result)
   })
-
   .get(auth, async (req, res) => {
     const { user_id } = req.user
     
@@ -60,6 +59,36 @@ router.route('/login')
     );
 
     res.status(200).send(token)
+  })
+  
+router.route('/username')
+  .patch(auth, async (req, res) => {
+    const { user_id } = req.user
+    const { username } = req.body
+
+    if (username === null || username === undefined || username === '') return res.status(400).send('Username cannot be empty.')
+
+    var userByUsernameResult = await userRepo.find({
+      username: username
+    })
+
+    if (userByUsernameResult.isSuccess) return res.status(400).send('This username is already taken.')
+
+    var userByIdResult = await userRepo.find({
+      _id: new mongo.ObjectID(user_id)
+    })
+
+    var user = userByIdResult.data
+
+    user.username = username;
+
+    console.log(user)
+
+    var updateResult = await userRepo.update(user)
+
+    if (!updateResult.isSuccess) return res.status(400).send('Cannot update username.')
+
+    res.status(200).send()
   })
 
 module.exports = router
