@@ -58,7 +58,7 @@ router.route('/login')
       "SOME93855447stodDBshsHD643DhhD7"
     );
 
-    res.status(200).send(token)
+    res.status(200).send({ token: token })
   })
   
 router.route('/username')
@@ -91,7 +91,7 @@ router.route('/username')
     res.status(200).send()
   })
 
-router.route('/username/:username')
+router.route('/friendship/:username')
   .get(auth, async (req, res) => {
     const { username } = req.params
 
