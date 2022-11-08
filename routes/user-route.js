@@ -84,7 +84,7 @@ router.route('/username')
 
     console.log(user)
 
-    var updateResult = await userRepo.update(user)
+    var updateResult = await userRepo.updateUsername(user)
 
     if (!updateResult.isSuccess) return res.status(400).send('Cannot update username.')
 
@@ -104,6 +104,37 @@ router.route('/friendship/:username')
     if (!userByUsernameResult.isSuccess) return res.status(404).send('User of passed username does not exists.')
 
     res.status(200).send({ _id: userByUsernameResult.data._id, username: userByUsernameResult.data.username })
+  })
+
+router.route('/friendship')
+  .post(auth, async (req, res) => {
+    const { user_id } = req.user
+    const { friend_id } = req.body
+
+    if (user_id === friend_id) res.status(400).send('You cannot add yourself as a friend.')
+    
+    var findUserResult = await userRepo.find({
+      _id: new mongo.ObjectID(user_id)
+    })
+
+    if (!findUserResult.isSuccess) return res.status(404).send('Cannot find user.')
+
+    const user = findUserResult.data
+
+    if (user.friends === undefined) user.friends = []
+
+    if (user.friends.find(u => u.friend_id === friend_id) != null) return res.status(400).send('This user is already your friend.')
+
+    user.friends.push({
+      friend_id: friend_id
+    })
+
+    console.log(user)
+    const updateResult = await userRepo.update(user)
+
+    if (!updateResult.isSuccess) return res.status(400).send('Cannot update user')
+
+    return res.status(200).send('OK')
   })
 
 module.exports = router

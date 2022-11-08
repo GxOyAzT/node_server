@@ -28,7 +28,7 @@ const find = async (filter) => {
   }
 }
 
-const update = async (user) => {
+const updateUsername = async (user) => {
   const db = await dbProvider()
   var result = await db.collection('user').updateOne({_id: new ObjectID(user._id)}, { $set: { username: user.username } })
   
@@ -45,4 +45,21 @@ const update = async (user) => {
   }
 }
 
-module.exports = { create, find, update }
+const update = async (user) => {
+  const db = await dbProvider()
+  var result = await db.collection('user').replaceOne({_id: user._id}, user, { upsert: true })
+  
+  if (result === null) return {
+    isSuccess: false,
+    error: 'Cannot update user.',
+    data: null
+  }
+
+  return {
+    isSuccess: true,
+    error: '',
+    data: result
+  }
+}
+
+module.exports = { create, find, updateUsername, update }
