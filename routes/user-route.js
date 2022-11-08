@@ -58,7 +58,7 @@ router.route('/login')
       "SOME93855447stodDBshsHD643DhhD7"
     );
 
-    res.status(200).send({ token: token })
+    res.status(200).send({ status: 200, data: { token: token }, error: '' })
   })
   
 router.route('/username')
