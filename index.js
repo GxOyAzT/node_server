@@ -16,6 +16,6 @@ app.get('/', (req, res) => {
   res.send('OK')
 })
 
-app.listen(9002, () => {
+module.exports = app.listen(9002, () => {
   console.log('Start...')
 })

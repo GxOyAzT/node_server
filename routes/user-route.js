@@ -3,28 +3,16 @@ const userRepo = require('../services/repos/user-repo')
 var jwt = require('jsonwebtoken');
 const auth = require("../services/auth/auth-middleware")
 var mongo = require('mongodb')
+const userService = require('../services/application/user');
+const { sendResponseBasedOnService } = require('../services/api/api-reponse-base-on-service');
 
 router.route('/')
   .post(async (req, res) => {
     const { email, password } = req.body
 
-    if (password === null || password.length < 5) return res.status(400).send('Password has to be at least 5 characters.')
+    const serviceRes = await userService.register({ email, password })
 
-    var findByEmailResult = await userRepo.find({
-      email: email,
-    })
-
-    if (findByEmailResult.isSuccess) return res.status(400).send('Email is already taken.')
-
-    var result = await userRepo.create({
-      email: email,
-      password: password,
-      active: false
-    })
-
-    if (!result.isSuccess) return res.status(500).send(result)
-
-    res.status(200).send(result)
+    return sendResponseBasedOnService(res, serviceRes)
   })
   .get(auth, async (req, res) => {
     const { user_id } = req.user
