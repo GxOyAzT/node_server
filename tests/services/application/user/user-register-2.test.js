@@ -1,4 +1,4 @@
-const userService = require('../../../../services/application/user')
+const userService = require('../../../../application/user')
 
 jest.mock('../../../../services/repos/user-repo', () => {
   return {

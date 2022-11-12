@@ -1,5 +1,5 @@
-const userRepo = require('../repos/user-repo')
-const Response = require('../../models/service-response')
+const userRepo = require('../services/repos/user-repo')
+const Response = require('../models/service-response')
 
 const register = async (user) => {
   if (user.email === undefined || user.email === null || user.email === '') return Response(400, null, 'Email cannot be empty.')

@@ -3,7 +3,7 @@ const userRepo = require('../services/repos/user-repo')
 var jwt = require('jsonwebtoken');
 const auth = require("../services/auth/auth-middleware")
 var mongo = require('mongodb')
-const userService = require('../services/application/user');
+const userService = require('../application/user');
 const { sendResponseBasedOnService } = require('../services/api/api-reponse-base-on-service');
 
 router.route('/')
