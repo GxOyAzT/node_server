@@ -15,7 +15,7 @@ router.route('/')
   .get(auth, async (req, res) => {
     const { user_id } = req.user
     
-    return sendResponseBasedOnService(await userService.getUserById(user_id))
+    return sendResponseBasedOnService(res, await userService.getUserById(user_id))
   })
 
 
