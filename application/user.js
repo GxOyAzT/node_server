@@ -1,6 +1,7 @@
 const userRepo = require('../services/repos/user-repo')
 var mongo = require('mongodb')
 const serviceResponse = require('../models/service-response')
+var jwt = require('jsonwebtoken');
 
 const register = async (user) => {
   if (user.email === undefined || user.email === null || user.email === '') return serviceResponse(400, null, 'Email cannot be empty.')
@@ -38,4 +39,22 @@ const getUserById = async (user_id) => {
   return serviceResponse(200, result.data, '')
 }
 
-module.exports = { register, getUserById }
+const login = async (user) => {
+  var result = await userRepo.find({
+    email: user.email,
+    password: user.password
+  })
+
+  if (!result.isSuccess) return serviceResponse(403, null, 'Invalid email or passowrd.') 
+
+  if (!result.data.active) return serviceResponse(403, null, 'User is not activated.') 
+  
+  const token = jwt.sign(
+    { user_id: result.data._id },
+    "SOME93855447stodDBshsHD643DhhD7"
+  );
+
+  return serviceResponse(200, { token: token }, '') 
+}
+
+module.exports = { register, getUserById, login }

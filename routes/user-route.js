@@ -1,6 +1,5 @@
 const router = require('express').Router()
 const userRepo = require('../services/repos/user-repo')
-var jwt = require('jsonwebtoken');
 const auth = require("../services/auth/auth-middleware")
 var mongo = require('mongodb')
 const userService = require('../application/user');
@@ -23,21 +22,7 @@ router.route('/login')
   .post(async (req, res) => {
     const { email, password } = req.body
 
-    var result = await userRepo.find({
-      email: email,
-      password: password
-    })
-
-    if (!result.isSuccess) return res.status(401).send('Invalid email or passowrd.')
-
-    if (!result.data.active) return res.status(401).send('User is not activated.')
-    
-    const token = jwt.sign(
-      { user_id: result.data._id },
-      "SOME93855447stodDBshsHD643DhhD7"
-    );
-
-    res.status(200).send({ status: 200, data: { token: token }, error: '' })
+    return sendResponseBasedOnService(res, await userService.login({ email, password }))
   })
   
 router.route('/username')
