@@ -10,21 +10,12 @@ router.route('/')
   .post(async (req, res) => {
     const { email, password } = req.body
 
-    const serviceRes = await userService.register({ email, password })
-
-    return sendResponseBasedOnService(res, serviceRes)
+    return sendResponseBasedOnService(res, await userService.register({ email, password }))
   })
   .get(auth, async (req, res) => {
     const { user_id } = req.user
     
-    var result = await userRepo.find({
-      _id: new mongo.ObjectID(user_id)
-    })
-
-    if (!result.isSuccess) return res.status(404).send('Cannot find user.')
-
-    result.data.password = null
-    res.status(200).send(result)
+    return sendResponseBasedOnService(await userService.getUserById(user_id))
   })
 
 
