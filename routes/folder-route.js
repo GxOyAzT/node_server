@@ -17,7 +17,7 @@ router.route('/')
 
     console.log(response)
 
-    res.status(201).send('OK')
+    res.status(201).send()
   })
 
 router.route('/contribution')
@@ -52,7 +52,7 @@ router.route('/contribution')
 
     if (!updateResult.isSuccess) return res.status(400).send('Cannot update folder.')
 
-    res.status(201).send('OK')
+    res.status(201).send()
   })
 
 module.exports = router
