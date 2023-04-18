@@ -1,23 +1,23 @@
 const dbProvider = require('../db/mongo-connection');
 
-const create = async folder => {
+const create = async deck => {
   const db = await dbProvider();
-  var result = await db.collection('folder').insertOne(folder);
+  const result = await db.collection('deck').insertOne(deck);
   return {
     isSuccess: true,
     error: '',
-    data: null,
+    data: {},
   };
 };
 
 const find = async filter => {
   const db = await dbProvider();
-  const result = await db.collection('folder').find(filter).toArray();
+  const result = await db.collection('deck').find(filter).toArray();
   if (result === null)
     return {
       isSuccess: false,
-      error: 'Cannot find folder.',
-      data: null,
+      error: 'Cannot find deck.',
+      data: {},
     };
 
   return {
@@ -27,16 +27,16 @@ const find = async filter => {
   };
 };
 
-const update = async folder => {
+const update = async deck => {
   const db = await dbProvider();
-  var result = await db
-    .collection('folder')
-    .replaceOne({ _id: folder._id }, folder, { upsert: true });
+  const result = await db
+    .collection('deck')
+    .replaceOne({ _id: deck._id }, deck, { upsert: true });
 
   if (result === null)
     return {
       isSuccess: false,
-      error: 'Cannot update folder.',
+      error: 'Cannot update deck.',
       data: null,
     };
 

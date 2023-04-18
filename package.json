@@ -7,20 +7,22 @@
     "node": "14.x"
   },
   "scripts": {
-    "test": "jest",
-    "start": "node index.js"
+    "start": "node index.js",
+    "server": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "dayjs": "^1.11.7",
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.11.0"
   },
   "devDependencies": {
     "jest": "^29.3.1",
-    "nodemon": "^2.0.20",
+    "nodemon": "^2.0.22",
     "supertest": "^6.3.1"
   }
 }

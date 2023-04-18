@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const folderRepo = require('../services/repos/folder-repo');
+const deckRepo = require('../services/repos/deck-repo');
 const auth = require('../services/auth/auth-middleware');
 var mongo = require('mongodb');
-const folderService = require('../application/folder');
+const deckService = require('../app/deck');
 const {
   sendResponseBasedOnService,
 } = require('../services/api/api-reponse-base-on-service');
@@ -11,32 +11,34 @@ router
   .route('/')
   .post(auth, async (req, res) => {
     const { user_id } = req.user;
-    const { name, from_lang, to_lang } = req.body;
-
-    const response = await folderRepo.create({
-      name: name,
-      from_lang: from_lang,
-      to_lang: to_lang,
-      owner_id: user_id,
-    });
-
-    console.log(response);
-
-    res.status(201).send();
+    const { name, fromLang, toLang, public } = req.body;
+    
+    return sendResponseBasedOnService(
+      res,
+      await deckService.createDeck({
+        name,
+        fromLang,
+        toLang,
+        public,
+        user_id,
+      })
+    );
   })
   .get(auth, async (req, res) => {
     const { user_id } = req.user;
     return sendResponseBasedOnService(
       res,
-      await folderService.getFolderByUserID(user_id)
+      await deckService.getFolderByUserID(user_id)
     );
   });
+
+// REMAKE THIS CODE
 
 router.route('/contribution').post(auth, async (req, res) => {
   const { user_id } = req.user;
   const { folder_id, contributor_id, permission_type } = req.body;
 
-  const findResult = await folderRepo.find({
+  const findResult = await deckRepo.find({
     _id: new mongo.ObjectID(folder_id),
     owner_id: user_id,
   });
@@ -64,7 +66,7 @@ router.route('/contribution').post(auth, async (req, res) => {
 
   console.log(folder);
 
-  const updateResult = await folderRepo.update(folder);
+  const updateResult = await deckRepo.update(folder);
 
   if (!updateResult.isSuccess)
     return res.status(400).send('Cannot update folder.');
