@@ -5,24 +5,20 @@ var jwt = require('jsonwebtoken');
 const dayjs = require('dayjs');
 
 const register = async user => {
-  if (!user.email) return serviceResponse(400, {}, 'Email cannot be empty.');
+  if (!user.email) return serviceResponse(400, {}, 'Email cannot be empty');
 
   if (!user.password)
-    return serviceResponse(400, {}, 'Password is required to register.');
+    return serviceResponse(400, {}, 'Password is required to register');
 
   if (user.password.length < 5)
-    return serviceResponse(
-      400,
-      {},
-      'Password has to be at least 5 characters.'
-    );
+    return serviceResponse(400, {}, 'Password has to be at least 5 characters');
 
   var findByEmailResult = await userRepo.find({
     email: user.email,
   });
 
   if (findByEmailResult.isSuccess)
-    return serviceResponse(400, {}, 'Email is already taken.');
+    return serviceResponse(400, {}, 'Email is already taken');
 
   var result = await userRepo.create({
     email: user.email,
@@ -34,11 +30,7 @@ const register = async user => {
   });
 
   if (!result.isSuccess)
-    return serviceResponse(
-      400,
-      {},
-      'Cannot register new user. Database error.'
-    );
+    return serviceResponse(400, {}, 'Cannot register new user. Database error');
 
   return serviceResponse(200, {}, '');
 };
@@ -48,7 +40,7 @@ const getUserById = async user_id => {
     _id: new mongo.ObjectID(user_id),
   });
 
-  if (!result.isSuccess) return serviceResponse(404, {}, 'Cannot find user.');
+  if (!result.isSuccess) return serviceResponse(404, {}, 'Cannot find user');
 
   result.data.password = {};
 
@@ -92,14 +84,14 @@ const logout = async res => {
 };
 
 const changeUsername = async (user_id, username) => {
-  if (!username) return serviceResponse(400, {}, 'Username cannot be empty.');
+  if (!username) return serviceResponse(400, {}, 'Username cannot be empty');
 
   const userByUsernameResult = await userRepo.find({
     username: username,
   });
 
   if (userByUsernameResult.isSuccess)
-    return serviceResponse(400, {}, 'This username is already taken.');
+    return serviceResponse(400, {}, 'This username is already taken');
 
   const userByIdResult = await userRepo.find({
     _id: new mongo.ObjectID(user_id),
@@ -112,7 +104,7 @@ const changeUsername = async (user_id, username) => {
   const updateResult = await userRepo.updateUsername(user);
 
   if (!updateResult.isSuccess)
-    return serviceResponse(400, {}, 'Cannot update username.');
+    return serviceResponse(400, {}, 'Cannot update username');
 
   return serviceResponse(200, user, '');
 };
